@@ -7,8 +7,8 @@ class ClockPainter extends CustomPainter {
   double? startAngle;
   double? endAngle;
 
-  double? disabledStartAngle;
-  double? disabledEndAngle;
+  List<double> disabledStartAngle;
+  List<double> disabledEndAngle;
   ActiveTime? activeTime;
 
   double radius;
@@ -38,6 +38,7 @@ class ClockPainter extends CustomPainter {
   bool autoAdjustLabels;
 
   double offsetRad;
+
   get startHandlerPosition {
     return _startHandlerPosition;
   }
@@ -49,8 +50,8 @@ class ClockPainter extends CustomPainter {
   ClockPainter({
     this.startAngle,
     this.endAngle,
-    this.disabledStartAngle,
-    this.disabledEndAngle,
+    this.disabledStartAngle = const [],
+    this.disabledEndAngle = const [],
     this.activeTime,
     required this.radius,
     required this.strokeWidth,
@@ -87,14 +88,16 @@ class ClockPainter extends CustomPainter {
 
     canvas.drawCircle(rect.center, radius, paint);
 
-    if (disabledStartAngle != null && disabledEndAngle != null) {
+    if (disabledStartAngle.isNotEmpty && disabledEndAngle.isNotEmpty) {
       paint.color = disabledColor;
-      var start = normalizeAngle(disabledStartAngle!);
-      var end = normalizeAngle(disabledEndAngle!);
-      var sweep = calcSweepAngle(start, end);
+      for (var i = 0; i < disabledStartAngle.length; i++) {
+        var start = normalizeAngle(disabledStartAngle[i]);
+        var end = normalizeAngle(disabledEndAngle[i]);
+        var sweep = calcSweepAngle(start, end);
 
-      canvas.drawArc(
-          rect, start, sweep, paintingStyle == PaintingStyle.fill, paint);
+        canvas.drawArc(
+            rect, start, sweep, paintingStyle == PaintingStyle.fill, paint);
+      }
     }
 
     drawTicks(

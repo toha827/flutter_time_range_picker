@@ -51,9 +51,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  TimeOfDay _startTime = TimeOfDay.now();
-  TimeOfDay _endTime =
-      TimeOfDay.fromDateTime(DateTime.now().add(const Duration(hours: 3)));
+  DateTime _startTime = DateTime.now();
+  DateTime _endTime = DateTime.now().add(const Duration(hours: 3));
 
   @override
   Widget build(BuildContext context) {
@@ -64,13 +63,13 @@ class _MyHomePageState extends State<MyHomePage> {
       body: ListView(children: [
         ElevatedButton(
           onPressed: () async {
-            TimeRange? result = await showTimeRangePicker(
-              context: context,
-            );
+            // DateRange? result = await showTimeRangePicker(
+            //   context: context,
+            // );
 
-            if (kDebugMode) {
-              print("result $result");
-            }
+            // if (kDebugMode) {
+            //   print("result $result");
+            // }
           },
           child: const Text("Pure"),
         ),
@@ -78,7 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
           onPressed: () {
             showTimeRangePicker(
               context: context,
-              start: const TimeOfDay(hour: 22, minute: 9),
+              start: DateTime.now(),
               onStartChange: (start) {
                 if (kDebugMode) {
                   print("start time $start");
@@ -136,13 +135,20 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         ElevatedButton(
           onPressed: () async {
-            TimeRange? result = await showTimeRangePicker(
+            DateRange? result = await showTimeRangePicker(
                 context: context,
-                start: const TimeOfDay(hour: 9, minute: 0),
-                end: const TimeOfDay(hour: 12, minute: 0),
-                disabledTime: TimeRange(
-                    startTime: const TimeOfDay(hour: 22, minute: 0),
-                    endTime: const TimeOfDay(hour: 5, minute: 0)),
+                start: DateTime.now().add(Duration(hours: 5)),
+                end: DateTime.now().add(Duration(hours: 9)),
+                disabledTime: [
+                  DateRange(
+                    startTime: DateTime.now().add(Duration(hours: 2)),
+                    endTime: DateTime.now().add(Duration(hours: 4)),
+                  ),
+                  DateRange(
+                    startTime: DateTime.now().add(Duration(hours: 6)),
+                    endTime: DateTime.now().add(Duration(hours: 8)),
+                  ),
+                ],
                 disabledColor: Colors.red.withOpacity(0.5),
                 strokeWidth: 4,
                 ticks: 24,
@@ -174,27 +180,35 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         ElevatedButton(
           onPressed: () async {
-            TimeRange? result = await showTimeRangePicker(
+            DateRange? result = await showTimeRangePicker(
               context: context,
               paintingStyle: PaintingStyle.fill,
               backgroundColor: Colors.grey.withOpacity(0.2),
               labels: [
                 ClockLabel.fromTime(
-                    time: const TimeOfDay(hour: 7, minute: 0),
+                    time: DateTime.now().add(Duration(hours: 10)),
                     text: "Start Work"),
                 ClockLabel.fromTime(
-                    time: const TimeOfDay(hour: 18, minute: 0), text: "Go Home")
+                    time: DateTime.now().add(Duration(hours: 10)),
+                    text: "Go Home")
               ],
-              start: const TimeOfDay(hour: 10, minute: 0),
-              end: const TimeOfDay(hour: 13, minute: 0),
+              start: DateTime.now().add(Duration(hours: 10)),
+              end: DateTime.now().add(Duration(hours: 5)),
               ticks: 8,
               strokeColor: Theme.of(context).primaryColor.withOpacity(0.5),
               ticksColor: Theme.of(context).primaryColor,
               labelOffset: 15,
               padding: 60,
-              disabledTime: TimeRange(
-                  startTime: const TimeOfDay(hour: 18, minute: 0),
-                  endTime: const TimeOfDay(hour: 7, minute: 0)),
+              disabledTime: [
+                DateRange(
+                  startTime: DateTime.now().add(Duration(hours: 1)),
+                  endTime: DateTime.now().add(Duration(hours: 1, minutes: 30)),
+                ),
+                DateRange(
+                  startTime: DateTime.now().add(Duration(hours: 3)),
+                  endTime: DateTime.now().add(Duration(hours: 3, minutes: 30)),
+                ),
+              ],
               disabledColor: Colors.red.withOpacity(0.5),
             );
 
@@ -206,7 +220,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         ElevatedButton(
           onPressed: () async {
-            TimeRange? result = await showTimeRangePicker(
+            DateRange? result = await showTimeRangePicker(
               context: context,
               strokeColor: Colors.teal,
               handlerColor: Colors.teal[200],
@@ -219,26 +233,26 @@ class _MyHomePageState extends State<MyHomePage> {
                 width: 200,
               ),
               labels: [
-                ClockLabel.fromTime(
-                    time: const TimeOfDay(hour: 6, minute: 0), text: "Get up"),
-                ClockLabel.fromTime(
-                    time: const TimeOfDay(hour: 9, minute: 0),
-                    text: "Coffee time"),
-                ClockLabel.fromTime(
-                    time: const TimeOfDay(hour: 15, minute: 0),
-                    text: "Afternoon"),
-                ClockLabel.fromTime(
-                    time: const TimeOfDay(hour: 18, minute: 0),
-                    text: "Time for a beer"),
-                ClockLabel.fromTime(
-                    time: const TimeOfDay(hour: 22, minute: 0),
-                    text: "Go to Sleep"),
-                ClockLabel.fromTime(
-                    time: const TimeOfDay(hour: 2, minute: 0),
-                    text: "Go for a pee"),
-                ClockLabel.fromTime(
-                    time: const TimeOfDay(hour: 12, minute: 0),
-                    text: "Lunchtime!")
+                // ClockLabel.fromTime(
+                //     time: const TimeOfDay(hour: 6, minute: 0), text: "Get up"),
+                // ClockLabel.fromTime(
+                //     time: const TimeOfDay(hour: 9, minute: 0),
+                //     text: "Coffee time"),
+                // ClockLabel.fromTime(
+                //     time: const TimeOfDay(hour: 15, minute: 0),
+                //     text: "Afternoon"),
+                // ClockLabel.fromTime(
+                //     time: const TimeOfDay(hour: 18, minute: 0),
+                //     text: "Time for a beer"),
+                // ClockLabel.fromTime(
+                //     time: const TimeOfDay(hour: 22, minute: 0),
+                //     text: "Go to Sleep"),
+                // ClockLabel.fromTime(
+                //     time: const TimeOfDay(hour: 2, minute: 0),
+                //     text: "Go for a pee"),
+                // ClockLabel.fromTime(
+                //     time: const TimeOfDay(hour: 12, minute: 0),
+                //     text: "Lunchtime!")
               ],
               ticksColor: Colors.black,
               labelOffset: 40,
@@ -254,7 +268,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         ElevatedButton(
           onPressed: () async {
-            TimeRange? result = await showTimeRangePicker(
+            DateRange? result = await showTimeRangePicker(
               context: context,
               strokeWidth: 4,
               ticks: 12,
@@ -279,11 +293,18 @@ class _MyHomePageState extends State<MyHomePage> {
               labelOffset: 30,
               padding: 55,
               labelStyle: const TextStyle(fontSize: 18, color: Colors.black),
-              start: const TimeOfDay(hour: 12, minute: 0),
-              end: const TimeOfDay(hour: 15, minute: 0),
-              disabledTime: TimeRange(
-                  startTime: const TimeOfDay(hour: 6, minute: 0),
-                  endTime: const TimeOfDay(hour: 10, minute: 0)),
+              start: DateTime.now().add(Duration(hours: 10)),
+              end: DateTime.now().add(Duration(hours: 5)),
+              disabledTime: [
+                DateRange(
+                  startTime: DateTime.now().add(Duration(hours: 2)),
+                  endTime: DateTime.now().add(Duration(hours: 4)),
+                ),
+                DateRange(
+                  startTime: DateTime.now().add(Duration(hours: 6)),
+                  endTime: DateTime.now().add(Duration(hours: 8)),
+                ),
+              ],
               clockRotation: 180.0,
             );
 
@@ -295,7 +316,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         ElevatedButton(
           onPressed: () async {
-            TimeRange? result = await showTimeRangePicker(
+            DateRange? result = await showTimeRangePicker(
               context: context,
               rotateLabels: false,
               ticks: 12,
@@ -316,12 +337,18 @@ class _MyHomePageState extends State<MyHomePage> {
               }).toList(),
               labelOffset: -30,
               padding: 55,
-              start: const TimeOfDay(hour: 12, minute: 0),
-              end: const TimeOfDay(hour: 18, minute: 0),
-              disabledTime: TimeRange(
-                startTime: const TimeOfDay(hour: 4, minute: 0),
-                endTime: const TimeOfDay(hour: 10, minute: 0),
-              ),
+              start: DateTime.now().add(Duration(hours: 10)),
+              end: DateTime.now().add(Duration(hours: 5)),
+              disabledTime: [
+                DateRange(
+                  startTime: DateTime.now().add(Duration(hours: 2)),
+                  endTime: DateTime.now().add(Duration(hours: 4)),
+                ),
+                DateRange(
+                  startTime: DateTime.now().add(Duration(hours: 6)),
+                  endTime: DateTime.now().add(Duration(hours: 8)),
+                ),
+              ],
               maxDuration: const Duration(hours: 6),
             );
 
@@ -333,7 +360,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         ElevatedButton(
           onPressed: () async {
-            TimeRange? result = await showTimeRangePicker(
+            DateRange? result = await showTimeRangePicker(
               context: context,
               rotateLabels: false,
               ticks: 12,
@@ -354,12 +381,18 @@ class _MyHomePageState extends State<MyHomePage> {
               }).toList(),
               labelOffset: -30,
               padding: 55,
-              start: const TimeOfDay(hour: 12, minute: 0),
-              end: const TimeOfDay(hour: 18, minute: 0),
-              disabledTime: TimeRange(
-                startTime: const TimeOfDay(hour: 4, minute: 0),
-                endTime: const TimeOfDay(hour: 10, minute: 0),
-              ),
+              start: DateTime.now().add(Duration(hours: 10)),
+              end: DateTime.now().add(Duration(hours: 5)),
+              disabledTime: [
+                DateRange(
+                  startTime: DateTime.now().add(Duration(hours: 2)),
+                  endTime: DateTime.now().add(Duration(hours: 4)),
+                ),
+                DateRange(
+                  startTime: DateTime.now().add(Duration(hours: 6)),
+                  endTime: DateTime.now().add(Duration(hours: 8)),
+                ),
+              ],
               minDuration: const Duration(hours: 3),
             );
             if (kDebugMode) {
@@ -370,7 +403,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         ElevatedButton(
           onPressed: () async {
-            TimeRange? result = await showTimeRangePicker(
+            DateRange? result = await showTimeRangePicker(
                 context: context, barrierDismissible: false);
 
             if (kDebugMode) {
@@ -391,8 +424,8 @@ class _MyHomePageState extends State<MyHomePage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Text("Start: ${_startTime.format(context)}"),
-            Text("End: ${_endTime.format(context)}"),
+            // Text("Start: ${_startTime.format(context)}"),
+            // Text("End: ${_endTime.format(context)}"),
           ],
         ),
         SizedBox(
@@ -403,11 +436,11 @@ class _MyHomePageState extends State<MyHomePage> {
             paintingStyle: PaintingStyle.fill,
             backgroundColor: Colors.grey.withOpacity(0.2),
             labels: [
-              ClockLabel.fromTime(
-                  time: const TimeOfDay(hour: 7, minute: 0),
-                  text: "Start Work"),
-              ClockLabel.fromTime(
-                  time: const TimeOfDay(hour: 18, minute: 0), text: "Go Home")
+              // ClockLabel.fromTime(
+              //     time: const TimeOfDay(hour: 7, minute: 0),
+              //     text: "Start Work"),
+              // ClockLabel.fromTime(
+              //     time: const TimeOfDay(hour: 18, minute: 0), text: "Go Home")
             ],
             start: _startTime,
             end: _endTime,
@@ -430,11 +463,11 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         ElevatedButton(
           onPressed: () async {
-            TimeRange? result = await showDialog(
+            DateRange? result = await showDialog(
               context: context,
               builder: (BuildContext context) {
-                TimeOfDay startTime = TimeOfDay.now();
-                TimeOfDay endTime = TimeOfDay.now();
+                DateTime startTime = DateTime.now();
+                DateTime endTime = DateTime.now();
                 return AlertDialog(
                   contentPadding: EdgeInsets.zero,
                   title: const Text("Choose a nice timeframe"),
@@ -465,7 +498,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: const Text('My custom ok'),
                       onPressed: () {
                         Navigator.of(context).pop(
-                            TimeRange(startTime: startTime, endTime: endTime));
+                            DateRange(startTime: startTime, endTime: endTime));
                       },
                     ),
                   ],
@@ -481,12 +514,12 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         ElevatedButton(
             onPressed: () async {
-              TimeRange? result = await showCupertinoDialog(
+              DateRange? result = await showCupertinoDialog(
                 barrierDismissible: true,
                 context: context,
                 builder: (BuildContext context) {
-                  TimeOfDay startTime = TimeOfDay.now();
-                  TimeOfDay endTime = TimeOfDay.now();
+                  DateTime startTime = DateTime.now();
+                  DateTime endTime = DateTime.now();
                   return CupertinoAlertDialog(
                     content: SizedBox(
                         width: MediaQuery.of(context).size.width,
@@ -531,7 +564,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: const Text('Ok'),
                         onPressed: () {
                           Navigator.of(context).pop(
-                            TimeRange(startTime: startTime, endTime: endTime),
+                            DateRange(startTime: startTime, endTime: endTime),
                           );
                         },
                       ),
