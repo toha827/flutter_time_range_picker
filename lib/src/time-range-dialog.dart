@@ -9,13 +9,13 @@ showTimeRangePicker({
   required BuildContext context,
 
   /// preselected start time
-  DateTime? start,
+  TimeOfDay? start,
 
   /// preselected end time
-  DateTime? end,
+  TimeOfDay? end,
 
   /// disabled time range (this time cannot be selected)
-  List<DateRange>? disabledTime,
+  List<TimeRange>? disabledTime,
 
   /// the color for the disabled section
   Color? disabledColor,
@@ -24,10 +24,10 @@ showTimeRangePicker({
   PaintingStyle paintingStyle = PaintingStyle.stroke,
 
   /// if start time changed
-  void Function(DateTime)? onStartChange,
+  void Function(TimeOfDay)? onStartChange,
 
   /// if end time changed
-  void Function(DateTime)? onEndChange,
+  void Function(TimeOfDay)? onEndChange,
 
   /// Minimum time steps that can be selected
   Duration interval = const Duration(minutes: 5),
@@ -166,7 +166,7 @@ showTimeRangePicker({
         minDuration: minDuration,
       ));
 
-  return await showDialog<DateRange>(
+  return await showDialog<TimeRange>(
     context: context,
     useRootNavigator: true,
     barrierDismissible: barrierDismissible,
@@ -179,13 +179,13 @@ showTimeRangePicker({
 }
 
 class TimeRangePicker extends StatefulWidget {
-  final DateTime? start;
-  final DateTime? end;
+  final TimeOfDay? start;
+  final TimeOfDay? end;
 
-  final List<DateRange>? disabledTime;
+  final List<TimeRange>? disabledTime;
 
-  final void Function(DateTime)? onStartChange;
-  final void Function(DateTime)? onEndChange;
+  final void Function(TimeOfDay)? onStartChange;
+  final void Function(TimeOfDay)? onEndChange;
 
   final Duration interval;
 
@@ -294,8 +294,8 @@ class TimeRangePickerState extends State<TimeRangePicker>
   final GlobalKey _circleKey = GlobalKey();
   final GlobalKey _wrapperKey = GlobalKey();
 
-  late DateTime _startTime;
-  late DateTime _endTime;
+  late TimeOfDay _startTime;
+  late TimeOfDay _endTime;
   double _radius = 50;
   double _offsetRad = 0;
 
@@ -335,16 +335,16 @@ class TimeRangePickerState extends State<TimeRangePicker>
 
   void setAngles() {
     setState(() {
-      var startTime = widget.start ?? DateTime.now();
+      var startTime = widget.start ?? TimeOfDay.now();
       var endTime = widget.end ??
-          startTime.copyWith(
+          startTime.replacing(
               hour: startTime.hour < 21
                   ? startTime.hour + 3
                   : startTime.hour - 21);
 
-      _startTime = _roundMinutes(startTime);
+      _startTime = _roundMinutes(startTime.hour * 60 + startTime.minute * 1.0);
       _startAngle = timeToAngle(_startTime, _offsetRad);
-      _endTime = _roundMinutes(endTime);
+      _endTime = _roundMinutes(endTime.hour * 60 + endTime.minute * 1.0);
 
       if (widget.maxDuration != null) {
         var startDate =
@@ -353,8 +353,7 @@ class TimeRangePickerState extends State<TimeRangePicker>
         var duration = endDate.difference(startDate);
         if (duration.inMinutes > widget.maxDuration!.inMinutes) {
           var maxDate = startDate.add(widget.maxDuration!);
-          _endTime = DateTime.now()
-              .copyWith(hour: maxDate.hour, minute: maxDate.minute);
+          _endTime = TimeOfDay(hour: maxDate.hour, minute: maxDate.minute);
         }
       }
 
@@ -371,23 +370,20 @@ class TimeRangePickerState extends State<TimeRangePicker>
     });
   }
 
-  DateTime _angleToTime(double angle) {
+  TimeOfDay _angleToTime(double angle) {
     angle = normalizeAngle(angle - pi / 2);
     double min = 24 * 60 * (angle) / (pi * 2);
 
-    return _roundMinutes(DateTime.now().add(Duration(
-      seconds: (min * 60).toInt(),
-    )));
+    return _roundMinutes(min);
   }
 
-  DateTime _roundMinutes(DateTime date) {
-    double min = date.hour * 60 + date.minute * 1.0;
+  TimeOfDay _roundMinutes(double min) {
     int roundedMin =
         ((min / widget.interval.inMinutes).round() * widget.interval.inMinutes);
 
     int hours = (roundedMin / 60).floor();
     int minutes = (roundedMin % 60).round();
-    return date.copyWith(hour: hours, minute: minutes);
+    return TimeOfDay(hour: hours, minute: minutes);
   }
 
   bool _panStart(PointerDownEvent ev) {
@@ -567,8 +563,7 @@ class TimeRangePickerState extends State<TimeRangePicker>
     var time = _angleToTime(angle - _offsetRad);
 
     //24 => 0
-    if (time.hour == 24)
-      time = DateTime.now().copyWith(hour: 0, minute: time.minute);
+    if (time.hour == 24) time = TimeOfDay(hour: 0, minute: time.minute);
 
     // snap to interval
     final snapped =
@@ -611,7 +606,7 @@ class TimeRangePickerState extends State<TimeRangePicker>
 
   _submit() {
     Navigator.of(context)
-        .pop(DateRange(startTime: _startTime, endTime: _endTime));
+        .pop(TimeRange(startTime: _startTime, endTime: _endTime));
   }
 
   _cancel() {

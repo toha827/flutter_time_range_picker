@@ -9,8 +9,8 @@ double normalizeAngle(double radians) {
 }
 
 //convert a time to the correct angle of the clock
-double timeToAngle(DateTime date, double offsetRad) {
-  int min = date.hour * 60 + date.minute;
+double timeToAngle(TimeOfDay time, double offsetRad) {
+  int min = time.hour * 60 + time.minute;
   double angle = min * pi * 2 / 60 / 24;
   return normalizeAngle(angle + pi / 2 + offsetRad);
 }
@@ -25,21 +25,18 @@ double signedAngle(double startAngle, double targetAngle) {
 
 double durationToAngle(Duration duration) {
   var min = duration.inMinutes;
-  var time = DateTime.now().copyWith(hour: min ~/ 60, minute: min % 60);
+  var time = TimeOfDay(hour: min ~/ 60, minute: min % 60);
 
   return signedAngle(timeToAngle(time, 0), pi / 2);
 }
 
 enum ActiveTime { Start, End }
 
-class DateRange {
-  DateTime startTime;
-  DateTime endTime;
+class TimeRange {
+  TimeOfDay startTime;
+  TimeOfDay endTime;
 
-  DateRange({
-    required this.startTime,
-    required this.endTime,
-  });
+  TimeRange({required this.startTime, required this.endTime});
 
   String toString() {
     return "Start: ${startTime.toString()} to ${endTime.toString()}";
@@ -56,7 +53,7 @@ class ClockLabel {
     return ClockLabel(angle: deg * pi / 180, text: text);
   }
 
-  factory ClockLabel.fromTime({required DateTime time, required String text}) {
+  factory ClockLabel.fromTime({required TimeOfDay time, required String text}) {
     double angle = timeToAngle(time, 0);
 
     return ClockLabel(angle: angle, text: text);
